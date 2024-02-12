@@ -7,12 +7,7 @@ terraform {
     }
   }
 
-  backend "remote" {
-    organization = "SlobodniZidari" # Replace with your Terraform Cloud organization name
-    workspaces {
-      name = "TerraformT" # Replace with your Terraform Cloud workspace name
-    }
-  }
+
 }
 //fneifneifnik
 
