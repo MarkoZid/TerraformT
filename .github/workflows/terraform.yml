@@ -27,6 +27,17 @@ jobs:
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
+    # Check the output of the curl command
+    - name: Check Azure CLI Installation
+      run: |
+        az --version
+        echo "Azure CLI installation completed successfully."
+
+    # Print the $PATH variable to verify Azure CLI installation directory is included
+    - name: Print PATH variable
+      run: |
+        echo "PATH: $PATH"
+
     # Authenticate with Azure CLI
     - name: Azure CLI Authentication
       run: az login
