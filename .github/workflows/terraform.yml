@@ -33,23 +33,16 @@ jobs:
         az --version
         echo "Azure CLI installation completed successfully."
 
-    # Print the $PATH variable to verify Azure CLI installation directory is included
+    # Print the PATH variable to verify that the Azure CLI installation directory is included
     - name: Print PATH variable
       run: |
-        echo "PATH: $PATH"
+        echo "PATH before: $PATH"
+        export PATH=$PATH:/opt/az/bin
+        echo "PATH after adding Azure CLI directory: $PATH"
 
     # Authenticate with Azure CLI
     - name: Azure CLI Authentication
       run: az login
-
-    # Alternatively, you can use Service Principal Authentication
-    # Create Service Principal and set environment variables
-    #- name: Service Principal Authentication
-    #  env:
-    #    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-    #    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-    #  run: |
-    #    az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant ${{ secrets.ARM_TENANT_ID }}
 
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
