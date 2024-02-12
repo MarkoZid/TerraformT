@@ -41,6 +41,11 @@ jobs:
           echo "Azure CLI executable not found."
         fi
 
+    # Check Azure CLI Installation Path
+    - name: Check Azure CLI Installation Path
+      run: |
+        whereis az
+
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
