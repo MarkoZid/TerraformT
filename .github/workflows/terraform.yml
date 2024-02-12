@@ -27,6 +27,19 @@ jobs:
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
+    # Authenticate with Azure CLI
+    - name: Azure CLI Authentication
+      run: az login
+
+    # Alternatively, you can use Service Principal Authentication
+    # Create Service Principal and set environment variables
+    #- name: Service Principal Authentication
+    #  env:
+    #    ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+    #    ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+    #  run: |
+    #    az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant ${{ secrets.ARM_TENANT_ID }}
+
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v1
