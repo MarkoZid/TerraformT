@@ -3,6 +3,7 @@ terraform {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = ">3.0.0"
+
     }
   }
 
@@ -19,6 +20,7 @@ terraform {
 provider "azurerm" {
   skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
   features {}
+  cli_installation_path = "/opt/az/bin"
 }
 
 # Create a resource group
