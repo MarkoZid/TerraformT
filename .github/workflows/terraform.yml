@@ -26,7 +26,12 @@ jobs:
     - name: Install Azure CLI
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
-        az extension add --name azure-cli-terraform --debug
+
+    # Download the Azure CLI Terraform extension
+    - name: Download and install azure-cli-terraform extension
+      run: |
+        wget -O azure-cli-terraform.whl "https://aka.ms/installazurecliwindowsx64"
+        az extension add --source ./azure-cli-terraform.whl
 
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -52,4 +57,3 @@ jobs:
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
-
