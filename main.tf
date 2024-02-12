@@ -6,7 +6,7 @@ terraform {
     }
   }
 
-   backend "remote" {
+  backend "remote" {
     organization = "SlobodniZidari" # Replace with your Terraform Cloud organization name
     workspaces {
       name = "TerraformT" # Replace with your Terraform Cloud workspace name
@@ -118,13 +118,13 @@ resource "azurerm_redis_cache" "redis" {
 # }
 
 output "sql_connection_string" {
-  value = "Server=tcp:${azurerm_mssql_server.mssql_server.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+  value     = "Server=tcp:${azurerm_mssql_server.mssql_server.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
   sensitive = true
 }
 
 output "redis_connection_string" {
-  
-  value = azurerm_redis_cache.redis.primary_connection_string
+
+  value     = azurerm_redis_cache.redis.primary_connection_string
   sensitive = true
 }
 
