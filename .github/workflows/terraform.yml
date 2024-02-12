@@ -31,20 +31,19 @@ jobs:
     - name: Azure CLI Authentication
       run: az login
 
+    # Check Azure CLI Installation Path
+    - name: Check Azure CLI Installation Path
+      run: whereis az
+
     # Check Azure CLI Installation Directory Permissions
     - name: Check Azure CLI Permissions
       run: |
         ls -l /opt/az
-        if [ -f "/opt/az/az" ]; then
-          sudo chmod +x /opt/az/az   # Ensure execute permission for the Azure CLI executable
+        if [ -f "/opt/az/bin/az" ]; then
+          sudo chmod +x /opt/az/bin/az   # Ensure execute permission for the Azure CLI executable
         else
           echo "Azure CLI executable not found."
         fi
-
-    # Check Azure CLI Installation Path
-    - name: Check Azure CLI Installation Path
-      run: |
-        whereis az
 
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
