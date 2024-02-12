@@ -27,22 +27,15 @@ jobs:
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-    # Check the output of the curl command
-    - name: Check Azure CLI Installation
-      run: |
-        az --version
-        echo "Azure CLI installation completed successfully."
-
-    # Print the PATH variable to verify that the Azure CLI installation directory is included
-    - name: Print PATH variable
-      run: |
-        echo "PATH before: $PATH"
-        export PATH=$PATH:/opt/az/bin
-        echo "PATH after adding Azure CLI directory: $PATH"
-
     # Authenticate with Azure CLI
     - name: Azure CLI Authentication
       run: az login
+
+    # Check Azure CLI Installation Directory Permissions
+    - name: Check Azure CLI Permissions
+      run: |
+        ls -l /opt/az
+        sudo chmod +x /opt/az/az   # Ensure execute permission for the Azure CLI executable
 
     # Install the specific version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
     - name: Setup Terraform
@@ -63,8 +56,7 @@ jobs:
     - name: Terraform Plan
       run: terraform plan -input=false
 
-      # On push to "main", build or change infrastructure according to Terraform configuration files
-      # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
+    # On push to "main", build or change infrastructure according to Terraform configuration files
     - name: Terraform Apply
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
