@@ -7,12 +7,7 @@ terraform {
     }
   }
 
-  backend "remote" {
-    organization = "SlobodniZidari"
-    workspaces {
-      name = "TerraformT"
-    }
-  }
+ 
 }
 //fneifneifnikdwdwzid
 
@@ -29,6 +24,22 @@ data "azurerm_client_config" "current" {}
 resource "azurerm_resource_group" "marathon" {
   name     = "TeraMaraton"
   location = "East US"
+}
+
+
+
+resource "azurerm_storage_account" "storageacc" {
+  name                     = "storagebackend1233"
+  resource_group_name      = azurerm_resource_group.marathon.name
+  location                 = azurerm_resource_group.marathon.location
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
+
+resource "azurerm_storage_container" "storage_comtainer" {
+  name                  = "tfstate"
+  storage_account_name  = azurerm_storage_account.storageacc.name
+  container_access_type = "container" # Set the access type (e.g., private, blob, container)
 }
 
 resource "azurerm_service_plan" "marathon_service_plan" {
@@ -105,7 +116,7 @@ resource "azurerm_mssql_database" "mssql_database" {
   name      = "mssql-dbzid"
   server_id = azurerm_mssql_server.mssql_server.id
 
-  max_size_gb = 5
+ 
   sku_name    = "Basic"
 
 
