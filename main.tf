@@ -104,9 +104,9 @@ resource "azurerm_mssql_server" "mssql_server" {
 resource "azurerm_mssql_database" "mssql_database" {
   name      = "mssql-dbzid"
   server_id = azurerm_mssql_server.mssql_server.id
-  
-  max_size_gb = 5 
-  sku_name  = "Basic"
+
+  max_size_gb = 5
+  sku_name    = "Basic"
 
 
   # prevent the possibility of accidental data loss
