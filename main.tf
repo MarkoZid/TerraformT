@@ -7,7 +7,12 @@ terraform {
     }
   }
 
-
+  backend "remote" {
+    organization = "SlobodniZidari"
+    workspaces {
+      name = "TerraformT"
+    }
+  }
 }
 //fneifneifnikdwdwzid
 
@@ -17,6 +22,8 @@ provider "azurerm" {
   features {}
 
 }
+
+data "azurerm_client_config" "current" {}
 
 # Create a resource group
 resource "azurerm_resource_group" "marathon" {
@@ -45,6 +52,18 @@ resource "azurerm_windows_web_app" "marathon_api" {
 
     }
 
+  }
+
+  connection_string {
+    name  = "Database"
+    type  = "SQLServer"
+    value = "Server=tcp:${azurerm_mssql_server.mssql_server.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+  }
+
+  connection_string {
+    name  = "Redis"
+    type  = "RedisCache"
+    value = azurerm_redis_cache.redis.primary_connection_string
   }
 
 }
@@ -85,12 +104,23 @@ resource "azurerm_mssql_server" "mssql_server" {
 resource "azurerm_mssql_database" "mssql_database" {
   name      = "mssql-dbzid"
   server_id = azurerm_mssql_server.mssql_server.id
+  
+  max_size_gb = 5 
+  sku_name  = "Basic"
+
 
   # prevent the possibility of accidental data loss
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
+}
+
+resource "azurerm_mssql_firewall_rule" "dbfirewall" {
+  name             = "FirewallRule1"
+  server_id        = azurerm_mssql_server.mssql_server.id
+  start_ip_address = "0.0.0.0"
+  end_ip_address   = "255.255.255.255"
 }
 
 
@@ -109,21 +139,6 @@ resource "azurerm_redis_cache" "redis" {
   }
 }
 
-# variable "redis_connection_string" {
-#   sensitive = true
-#   default = azurerm_redis_cache.redis.primary_connection_string
-# }
-
-output "sql_connection_string" {
-  value     = "Server=tcp:${azurerm_mssql_server.mssql_server.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
-  sensitive = true
-}
-
-output "redis_connection_string" {
-
-  value     = azurerm_redis_cache.redis.primary_connection_string
-  sensitive = true
-}
 
 resource "azurerm_redis_firewall_rule" "redis_firewall" {
   name                = "redisFirewallzid"
@@ -132,3 +147,55 @@ resource "azurerm_redis_firewall_rule" "redis_firewall" {
   start_ip            = "0.0.0.0"
   end_ip              = "255.255.255.255"
 }
+
+resource "azurerm_key_vault" "key_vault" {
+  name                     = "keyvault12656706034"
+  location                 = azurerm_resource_group.marathon.location
+  resource_group_name      = azurerm_resource_group.marathon.name
+  tenant_id                = data.azurerm_client_config.current.tenant_id
+  purge_protection_enabled = false
+
+  sku_name = "standard"
+
+  access_policy {
+    tenant_id = data.azurerm_client_config.current.tenant_id
+    object_id = data.azurerm_client_config.current.object_id
+    key_permissions = [
+      "Get",
+    ]
+    secret_permissions = [
+      "Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set",
+    ]
+    storage_permissions = [
+      "Get",
+    ]
+  }
+}
+
+resource "azurerm_key_vault_secret" "key_vault_secret1" {
+  name         = "default-connection-string"
+  value        = "Server=tcp:${azurerm_mssql_server.mssql_server.name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "key_vault_secret2" {
+  name         = "redis-connection-string"
+  value        = azurerm_redis_cache.redis.primary_connection_string
+  key_vault_id = azurerm_key_vault.key_vault.id
+}
+
+
+
+
+# output "sql_connection_string" {
+#   value     = "Server=tcp:${azurerm_mssql_server.mssql_server.fully_qualified_domain_name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+#   sensitive = true
+# }
+
+# output "redis_connection_string" {
+
+#   value     = azurerm_redis_cache.redis.primary_connection_string
+#   sensitive = true
+# }
+
+
