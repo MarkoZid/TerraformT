@@ -67,41 +67,7 @@ jobs:
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: terraform apply -auto-approve -input=false
 
-  deploy_dotnet:
-    name: 'Deploy .NET Core app to Azure Web App'
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy_dotnet:
-    name: 'Deploy .NET Core app to Azure Web App'
-
-on:
-  push:
-    branches:
-      - main
-
-jobs:
-  deploy_dotnet:
-    name: 'Deploy .NET Core app to Azure Web App'
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      # Authenticate with Azure CLI
-      - name: Azure CLI Authentication
-        run: az login
-
-      - name: Set up Azure CLI
-        uses: azure/CLI@v1
-
+      # Deploy the .NET Core app to Azure Web App
       - name: Deploy .NET Core app to Azure Web App
         run: |
           az webapp deployment source config-zip -g YourResourceGroup -n YourWebAppName --src ./publish.zip
-
-
