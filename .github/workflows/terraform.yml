@@ -70,4 +70,4 @@ jobs:
       # Deploy the .NET Core app to Azure Web App
       - name: Deploy .NET Core app to Azure Web App
         run: |
-          az webapp deployment source config-zip -g TeraMaraton -n marathon-apizid --src ./publish3.zip
+          az webapp deployment source config-zip -g TeraMaraton -n marathon-apizid --src ./publish4.zip
