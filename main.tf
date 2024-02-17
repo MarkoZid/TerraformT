@@ -167,25 +167,26 @@ resource "azurerm_key_vault" "key_vault" {
   purge_protection_enabled = false
 
   sku_name = "standard"
+}
 
-  access_policy {
-    tenant_id = data.azurerm_client_config.current.tenant_id
-    object_id = data.azurerm_client_config.current.object_id
-    key_permissions = [
-      "Get",
-    ]
-    secret_permissions = [
-      "Get", "Backup", "Delete", "List", "Purge", "Recover", "Restore", "Set",
-    ]
-    storage_permissions = [
-      "Get",
-    ]
-  }
+data "azuread_service_principal" "terraZid" {
+  display_name = "ZidarTerraform2"
+}
+
+resource "azurerm_key_vault_access_policy" "terraZid_policy" {
+  key_vault_id = azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = data.azuread_service_principal.terraZid.object_id
+
+  secret_permissions = [
+    "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+  ]
 }
 
 resource "azurerm_key_vault_secret" "key_vault_secret1" {
   name         = "default-connection-string"
-  value        = "Server=tcp:${azurerm_mssql_server.mssql_server.name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+  //value        = "Server=tcp:${azurerm_mssql_server.mssql_server.name},1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=True;Encrypt=True"
+  value     = "Server=tcp:${azurerm_mssql_server.mssql_server.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login}@${azurerm_mssql_server.mssql_server.name};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   key_vault_id = azurerm_key_vault.key_vault.id
 }
 
@@ -194,6 +195,7 @@ resource "azurerm_key_vault_secret" "key_vault_secret2" {
   value        = azurerm_redis_cache.redis.primary_connection_string
   key_vault_id = azurerm_key_vault.key_vault.id
 }
+
 
 
 
