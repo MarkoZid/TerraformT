@@ -73,5 +73,5 @@ jobs:
       with:
         app-name: 'marathon-apizid'  # Replace with your Azure Web App name
         slot-name: 'Production'    # Replace with your deployment slot name if applicable
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4D8F0538F6264F1D84A7DE1C7BCB5CC2 }}  # Replace with your Azure App Service publish profile secret
+       # publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4D8F0538F6264F1D84A7DE1C7BCB5CC2 }}  # Replace with your Azure App Service publish profile secret
         package: ./publish.zip  # Path to the directory containing your .NET Core app files
