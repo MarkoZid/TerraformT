@@ -89,6 +89,8 @@ resource "azurerm_mssql_database" "mssql_database" {
   name      = var.sql_database_name
   server_id = azurerm_mssql_server.mssql_server.id
   sku_name  = "Basic"
+  
+  
 
   # prevent the possibility of accidental data loss
   lifecycle {
