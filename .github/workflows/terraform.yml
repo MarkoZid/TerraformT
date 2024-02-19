@@ -27,13 +27,9 @@ jobs:
         run: |
           curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-      # Authenticate with Azure CLI using OIDC
-      - name: Az CLI login using OIDC
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENNANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUB }}
+      # Authenticate with Azure CLI
+      - name: Azure CLI Authentication
+        run: az login
 
       # Check Azure CLI Installation Path
       - name: Check Azure CLI Installation Path
@@ -60,7 +56,7 @@ jobs:
       - name: Terraform Init
         run: terraform init -input=false
 
-      # Generates an execution plan for Terraform
+    # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: |
           export PATH=$PATH:/opt/az/bin
@@ -68,7 +64,7 @@ jobs:
         env:
           AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
           AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENNANT_ID }}
           AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUB }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
@@ -80,9 +76,3 @@ jobs:
       - name: Deploy .NET Core app to Azure Web App
         run: |
           az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./publish5.zip
-
-      # Run Azure CLI commands
-      - name: Run az commands
-        run: |
-          az account show
-          az group list
