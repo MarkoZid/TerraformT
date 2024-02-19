@@ -80,3 +80,9 @@ jobs:
       - name: Deploy .NET Core app to Azure Web App
         run: |
           az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./publish5.zip
+
+      # Run Azure CLI commands
+      - name: Run az commands
+        run: |
+          az account show
+          az group list
