@@ -56,7 +56,7 @@ variable "key_vault_name" {
 variable "key_vault_secret_connection_string_name" {
   description = "The name of the Key Vault secret for the connection string."
   type        = string
-  default     = "default-connection-string1"
+  default     = "default-connection-string"
 }
 
 variable "key_vault_secret_redis_connection_string_name" {
