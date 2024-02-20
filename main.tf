@@ -1,4 +1,3 @@
-
 terraform {
   required_providers {
     azurerm = {
@@ -15,8 +14,13 @@ provider "azurerm" {
 }
 
 data "azurerm_client_config" "current" {}
+
 data "azuread_service_principal" "terraZid" {
   display_name = "ZidarTerraform2"
+}
+
+data "azuread_service_principal" "terraform" {
+  display_name = var.display_name
 }
 
 # Create a resource group
@@ -141,23 +145,21 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                 = "standard"
 }
 
-resource "azurerm_key_vault_access_policy" "zid_access" {
-  key_vault_id = azurerm_key_vault.key_vault.id
-  tenant_id    = data.azurerm_client_config.current.tenant_id
-  object_id    = var.user_object_id
+# resource "azurerm_key_vault_access_policy" "zid_access" {
+#   key_vault_id = azurerm_key_vault.key_vault.id
+#   tenant_id    = data.azurerm_client_config.current.tenant_id
+#   object_id    = var.user_object_id
 
-  key_permissions = [
-    "Get",
-  ]
+#   key_permissions = [
+#     "Get",
+#   ]
 
-  secret_permissions = [
-    "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
-  ]
-}
+#   secret_permissions = [
+#     "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+#   ]
+# }
 
-data "azuread_service_principal" "terraform" {
-  display_name = var.display_name
-}
+
 
 resource "azurerm_key_vault_access_policy" "azurerm_key_vault_access_policy2" {
   key_vault_id = azurerm_key_vault.key_vault.id
@@ -165,6 +167,10 @@ resource "azurerm_key_vault_access_policy" "azurerm_key_vault_access_policy2" {
   object_id    = data.azuread_service_principal.terraform.object_id
   secret_permissions = [
     "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+  ]
+
+   depends_on = [
+    azurerm_key_vault_secret.key_vault_secret2
   ]
 }
 
@@ -178,4 +184,9 @@ resource "azurerm_key_vault_secret" "key_vault_secret2" {
   name         = var.key_vault_secret_redis_connection_string_name
   value        = azurerm_redis_cache.redis.primary_connection_string
   key_vault_id = azurerm_key_vault.key_vault.id
+
+
+   depends_on = [
+    azurerm_key_vault_secret.key_vault_secret1
+    ]
 }
