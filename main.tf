@@ -47,6 +47,12 @@ resource "azurerm_windows_web_app" "marathon_api" {
       current_stack  = "dotnet"
       dotnet_version = "v7.0"
     }
+
+    cors {
+      allowed_origins     = ["https://marathon-clientzid.azurewebsites.net"]
+      support_credentials = true # Set to true if you want to allow credentials (like cookies or HTTP authentication) to be sent in the CORS request
+    }
+
   }
 }
 
@@ -62,6 +68,12 @@ resource "azurerm_windows_web_app" "marathon_client" {
       current_stack = "node"
       node_version  = "~18"
     }
+
+     cors {
+      allowed_origins     = ["https://marathon-apizid.azurewebsites.net"]
+      support_credentials = true # Set to true if you want to allow credentials (like cookies or HTTP authentication) to be sent in the CORS request
+    }
+
   }
 }
 
