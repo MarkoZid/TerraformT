@@ -113,27 +113,27 @@ resource "azurerm_mssql_database" "mssql_database" {
   }
 }
 
-# resource "azurerm_redis_cache" "redis" {
-#   name                = var.redis_cache_name
-#   location            = azurerm_resource_group.marathon.location
-#   resource_group_name = azurerm_resource_group.marathon.name
-#   capacity            = 2
-#   family              = "C"
-#   sku_name            = "Basic"
-#   enable_non_ssl_port = false
-#   minimum_tls_version = "1.2"
+resource "azurerm_redis_cache" "redis" {
+  name                = var.redis_cache_name
+  location            = azurerm_resource_group.marathon.location
+  resource_group_name = azurerm_resource_group.marathon.name
+  capacity            = 2
+  family              = "C"
+  sku_name            = "Basic"
+  enable_non_ssl_port = false
+  minimum_tls_version = "1.2"
 
-#   redis_configuration {
-#   }
-# }
+  redis_configuration {
+  }
+}
 
-# resource "azurerm_redis_firewall_rule" "redis_firewall" {
-#   name                = var.redis_name
-#   redis_cache_name    = azurerm_redis_cache.redis.name
-#   resource_group_name = azurerm_resource_group.marathon.name
-#   start_ip            = "0.0.0.0"
-#   end_ip              = "255.255.255.255"
-# }
+resource "azurerm_redis_firewall_rule" "redis_firewall" {
+  name                = var.redis_name
+  redis_cache_name    = azurerm_redis_cache.redis.name
+  resource_group_name = azurerm_resource_group.marathon.name
+  start_ip            = "0.0.0.0"
+  end_ip              = "255.255.255.255"
+}
 
 resource "azurerm_mssql_firewall_rule" "dbfirewall" {
   name             = var.redis_firewall
@@ -151,19 +151,19 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                 = "standard"
 }
 
-# resource "azurerm_key_vault_access_policy" "zid_access" {
-#   key_vault_id = azurerm_key_vault.key_vault.id
-#   tenant_id    = data.azurerm_client_config.current.tenant_id
-#   object_id    = var.user_object_id
+resource "azurerm_key_vault_access_policy" "zid_access" {
+  key_vault_id = azurerm_key_vault.key_vault.id
+  tenant_id    = data.azurerm_client_config.current.tenant_id
+  object_id    = var.user_object_id
 
-#   key_permissions = [
-#     "Get",
-#   ]
+  key_permissions = [
+    "Get",
+  ]
 
-#   secret_permissions = [
-#     "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
-#   ]
-# }
+  secret_permissions = [
+    "Backup", "Delete", "Get", "List", "Purge", "Recover", "Restore", "Set"
+  ]
+}
 
 
 
@@ -187,18 +187,18 @@ resource "azurerm_key_vault_secret" "key_vault_secret1" {
   value        = "Server=tcp:${azurerm_mssql_server.mssql_server.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login}@${azurerm_mssql_server.mssql_server.name};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   key_vault_id = azurerm_key_vault.key_vault.id
 
-  depends_on = [
-    azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
-    ]
+  # depends_on = [
+  #   azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
+  #   ]
 }
 
-# resource "azurerm_key_vault_secret" "key_vault_secret2" {
-#   name         = var.key_vault_secret_redis_connection_string_name
-#   value        = azurerm_redis_cache.redis.primary_connection_string
-#   key_vault_id = azurerm_key_vault.key_vault.id
+resource "azurerm_key_vault_secret" "key_vault_secret2" {
+  name         = var.key_vault_secret_redis_connection_string_name
+  value        = azurerm_redis_cache.redis.primary_connection_string
+  key_vault_id = azurerm_key_vault.key_vault.id
 
 
-#   #  depends_on = [
-#   #   azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
-#   #   ]
-# }
+  #  depends_on = [
+  #   azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
+  #   ]
+}
