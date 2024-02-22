@@ -156,6 +156,8 @@ resource "azurerm_key_vault" "key_vault" {
   sku_name                 = "standard"
 
     //soft_delete_enabled = false 
+
+    //konecno?
 }
 
 resource "azurerm_key_vault_access_policy" "zid_access" {
