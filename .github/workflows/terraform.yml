@@ -75,7 +75,7 @@ jobs:
       # Deploy the .NET Core app to Azure Web App
       - name: Deploy .NET Core app to Azure Web App
         run: |
-          az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./donnet-api1.zip
+          az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./api99.zip
 
        # Deploy the Client to Azure Web App
       - name: Deploy Frontend to Azure Web App
