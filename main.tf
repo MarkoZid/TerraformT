@@ -11,6 +11,11 @@ terraform {
 provider "azurerm" {
   skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
   features {
+
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+    
     key_vault {
       purge_soft_delete_on_destroy    = true
       //recover_soft_deleted_key_vaults = true
@@ -23,6 +28,8 @@ provider "azurerm" {
   subscription_id = "4f13db90-7175-430a-92c4-956419feab2e"
 
 }
+
+//dajboze
 
 data "azurerm_client_config" "current" {}
 
