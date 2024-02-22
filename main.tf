@@ -149,6 +149,8 @@ resource "azurerm_key_vault" "key_vault" {
   tenant_id                = data.azurerm_client_config.current.tenant_id
   purge_protection_enabled = false
   sku_name                 = "standard"
+
+    soft_delete_enabled = false 
 }
 
 resource "azurerm_key_vault_access_policy" "zid_access" {
@@ -187,9 +189,9 @@ resource "azurerm_key_vault_secret" "key_vault_secret1" {
   value        = "Server=tcp:${azurerm_mssql_server.mssql_server.name}.database.windows.net,1433;Initial Catalog=${azurerm_mssql_database.mssql_database.name};Persist Security Info=False;User ID=${azurerm_mssql_server.mssql_server.administrator_login}@${azurerm_mssql_server.mssql_server.name};Password=${azurerm_mssql_server.mssql_server.administrator_login_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
   key_vault_id = azurerm_key_vault.key_vault.id
 
-  # depends_on = [
-  #   azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
-  #   ]
+  depends_on = [
+    azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
+    ]
 }
 
 resource "azurerm_key_vault_secret" "key_vault_secret2" {
@@ -198,7 +200,7 @@ resource "azurerm_key_vault_secret" "key_vault_secret2" {
   key_vault_id = azurerm_key_vault.key_vault.id
 
 
-  #  depends_on = [
-  #   azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
-  #   ]
+   depends_on = [
+    azurerm_key_vault_access_policy.azurerm_key_vault_access_policy2
+    ]
 }
