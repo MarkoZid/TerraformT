@@ -29,7 +29,7 @@ provider "azurerm" {
 
 }
 
-//dajboze
+//aaaubauuu
 
 data "azurerm_client_config" "current" {}
 
