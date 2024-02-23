@@ -32,7 +32,7 @@ variable "app_name_client" {
 variable "sql_server_name" {
   description = "The name of the SQL Server."
   type        = string
-  default     = "sql-server14zid"
+  default     = "sql-server14zidd"
 }
 
 variable "sql_database_name" {
