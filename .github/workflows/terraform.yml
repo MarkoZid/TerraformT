@@ -56,11 +56,16 @@ jobs:
       - name: Terraform Init
         run: terraform init -input=false
 
-      # Generates an execution plan for Terraform
+    # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: |
           export PATH=$PATH:/opt/az/bin
           terraform plan -input=false
+        env:
+          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+          AZURE_TENANT_ID: ${{ secrets.AZURE_TENNANT_ID }}
+          AZURE_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUB }}
 
       # On push to "main", build or change infrastructure according to Terraform configuration files
       - name: Terraform Apply
@@ -70,4 +75,9 @@ jobs:
       # Deploy the .NET Core app to Azure Web App
       - name: Deploy .NET Core app to Azure Web App
         run: |
-          az webapp deployment source config-zip -g TeraMaraton -n marathon-apizid --src ./publish4.zip
+          az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./api99.zip
+
+       # Deploy the Client to Azure Web App
+      - name: Deploy Frontend to Azure Web App
+        run: |
+          az webapp deployment source config-zip -g TeraMarathon -n marathon-clientzid --src ./build1.zip   

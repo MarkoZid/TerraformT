@@ -33,6 +33,7 @@ variable "sql_server_name" {
   description = "The name of the SQL Server."
   type        = string
   default     = "sql-server14zidar"
+
 }
 
 variable "sql_database_name" {
