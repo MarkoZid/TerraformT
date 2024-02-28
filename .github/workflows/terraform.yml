@@ -60,10 +60,10 @@ jobs:
       - name: Deploy .NET Core app to Azure Web App
         run: |
           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
-          az webapp deployment source config-zip -g Marathon1 -n marathon-api --src ./api99.zip
+          az webapp deployment source config-zip -g TeraMarathon -n marathon-apizid --src ./api99.zip
 
       # Deploy the Client to Azure Web App
       - name: Deploy Frontend to Azure Web App
         run: |
           az login --service-principal -u $ARM_CLIENT_ID -p $ARM_CLIENT_SECRET --tenant $ARM_TENANT_ID
-          az webapp deployment source config-zip -g Marathon1 -n marathon-client --src ./build1.zip 
+          az webapp deployment source config-zip -g TeraMarathon -n marathon-clientzid --src ./build1.zip 
