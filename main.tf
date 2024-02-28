@@ -6,7 +6,7 @@ terraform {
     }
   }
 }
-
+//deffefefefefefeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
   skip_provider_registration = true # This is only required when the User, Service Principal, or Identity running Terraform lacks the permissions to register Azure Resource Providers.
@@ -46,7 +46,6 @@ resource "azurerm_resource_group" "marathon" {
   name     = var.resource_group_name
   location = var.location
 }
-//aa
 
 
 resource "azurerm_service_plan" "marathon_service_plan" {
