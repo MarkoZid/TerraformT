@@ -46,7 +46,7 @@ resource "azurerm_resource_group" "marathon" {
   name     = var.resource_group_name
   location = var.location
 }
-
+//aa
 
 
 resource "azurerm_service_plan" "marathon_service_plan" {
