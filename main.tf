@@ -145,7 +145,7 @@ resource "azurerm_redis_firewall_rule" "redis_firewall" {
   start_ip            = "0.0.0.0"
   end_ip              = "255.255.255.255"
 }
-
+//
 resource "azurerm_mssql_firewall_rule" "dbfirewall" {
   name             = var.redis_firewall
   server_id        = azurerm_mssql_server.mssql_server.id
