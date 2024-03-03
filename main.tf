@@ -76,7 +76,7 @@ resource "azurerm_windows_web_app" "marathon_api" {
 
   }
 }
-
+//---
 resource "azurerm_windows_web_app" "marathon_client" {
   name                = var.app_name_client
   resource_group_name = azurerm_resource_group.marathon.name
